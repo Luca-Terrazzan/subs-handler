@@ -8,14 +8,12 @@ SUBS_FOLDER = VIDEO_FOLDER.joinpath("Subs")
 
 def find_videos_in_folder() -> List[Path]:
     video_files = []
+
     for root, dirs, files in os.walk(VIDEO_FOLDER):
         for file in files:
             if file.endswith(".mp4"):
-                print("found video: " + file)
                 video_files.append(Path(root).joinpath(file))
 
-    print("found videos:")
-    print(video_files)
     return video_files
 
 
@@ -40,4 +38,4 @@ if __name__ == "__main__":
         video_sub_file = find_sub_file(video.stem)
         print(f'For file {video.name}, found sub file {video_sub_file}')
 
-        # copy_sub_to_video(video.parent, video_sub_folder)
+        copy_sub_to_video(video.parent.joinpath(video.stem+'.srt'), video_sub_file)
