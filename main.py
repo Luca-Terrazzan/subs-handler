@@ -21,7 +21,7 @@ def find_sub_file(video_name: str) -> Path:
     for root, dirs, files in os.walk(SUBS_FOLDER):
         for file in files:
             sub_file_path_obj = Path(root).joinpath(Path(file))
-            if str(sub_file_path_obj.parent.name) == video_name:
+            if str(sub_file_path_obj.parent.name) == video_name and sub_file_path_obj.stat().st_size > 15000:
                 return sub_file_path_obj
 
 def copy_sub_to_video(video_path: Path, sub_path: Path) -> None:
@@ -36,6 +36,9 @@ if __name__ == "__main__":
     videos = find_videos_in_folder()
     for video in videos:
         video_sub_file = find_sub_file(video.stem)
+        if not video_sub_file:
+            print(f'Could not find a valid sub for file {video.name}')
+            continue
         print(f'For file {video.name}, found sub file {video_sub_file}')
 
         copy_sub_to_video(video.parent.joinpath(video.stem+'.srt'), video_sub_file)
